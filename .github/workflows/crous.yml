@@ -26,4 +26,5 @@ jobs:
       - name: Run CROUS monitor
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: python monitor.py
+          PYTHONUNBUFFERED: "1"
+        run: python -u monitor.py
