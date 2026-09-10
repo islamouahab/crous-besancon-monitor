@@ -11,9 +11,7 @@ import requests
 API_URL = "https://trouverunlogement.lescrous.fr/api/fr/search/47"
 
 SEARCH_URL = (
-    "https://trouverunlogement.lescrous.fr/tools/47/search"
-    "?bounds=5.9409699_47.3200746_6.0834844_47.2006872"
-    "&locationName=Besançon+%2825000%29"
+"https://trouverunlogement.lescrous.fr/"
 )
 
 PAYLOAD = {
