@@ -170,7 +170,7 @@ def send_ntfy(rooms):
         f"https://ntfy.sh/{topic}",
         data=message.encode("utf-8"),
         headers={
-            "Title": "🚨 CROUS BESANÇON",
+            "Title": "CROUS BESANÇON",
             "Priority": "5",
             "Tags": "rotating_light,house",
             "Click": SEARCH_URL,
