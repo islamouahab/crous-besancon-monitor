@@ -2,7 +2,6 @@ import os
 import json
 import time
 import hashlib
-from pathlib import Path
 from datetime import datetime, timezone
 
 import requests
@@ -45,7 +44,7 @@ HEADERS = {
     "Referer": SEARCH_URL,
 }
 
-STATE_FILE = Path("last_seen.json")
+
 CHECK_EVERY = 180  # 3 minutes
 
 
@@ -112,24 +111,6 @@ def room_id(room):
     return hashlib.sha256(raw.encode()).hexdigest()
 
 
-def load_previous():
-    if not STATE_FILE.exists():
-        return set()
-
-    try:
-        data = json.loads(STATE_FILE.read_text())
-        return set(data)
-    except Exception:
-        return set()
-
-
-def save_current(rooms):
-    ids = [room_id(room) for room in rooms]
-    STATE_FILE.write_text(
-        json.dumps(ids, ensure_ascii=False, indent=2)
-    )
-
-
 def send_ntfy(rooms):
     topic = os.environ.get("NTFY_TOPIC")
 
@@ -183,27 +164,20 @@ def send_ntfy(rooms):
     print("📱 ntfy notification sent!")
 
 
+
 def check_once(session):
     try:
         rooms = fetch_rooms(session)
 
-        previous = load_previous()
-        current = {room_id(room): room for room in rooms}
-
-        new_rooms = [
-            room
-            for rid, room in current.items()
-            if rid not in previous
-        ]
-
-        if new_rooms:
-            print("🚨 NEW ROOMS:", len(new_rooms))
-            send_ntfy(new_rooms)
-
-        save_current(rooms)
+        if rooms:
+            print("🚨 ROOMS AVAILABLE:", len(rooms))
+            send_ntfy(rooms)
+        else:
+            print("No rooms available.")
 
     except Exception as e:
         print("CHECK ERROR:", repr(e))
+
 
 
 def main():
